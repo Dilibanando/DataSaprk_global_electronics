@@ -1,0 +1,154 @@
+1.#Segmentation By Age
+
+SELECT 
+    Gender, 
+    CASE 
+        WHEN DATEDIFF(order_date, Birthday) / 365 < 30 THEN 'Youth'
+        WHEN DATEDIFF(order_date, Birthday) / 365 BETWEEN 30 AND 50 THEN 'Adult'
+        ELSE 'Senior' 
+    END AS Age_Group,
+    COUNT(DISTINCT CustomerKey) AS Customer_Count 
+FROM 
+    merged_data 
+GROUP BY 
+    Gender, Age_Group;
+
+
+2.#category analysis
+SELECT 
+    Product_Name, 
+    AVG(Actual_Unitprice_In_USD - Actual_Unitcost_In_USD) AS Avg_Profit_Margin 
+FROM 
+    merged_data 
+GROUP BY 
+    Product_Name 
+ORDER BY 
+    Avg_Profit_Margin DESC;
+
+
+3.##Demographic Distribution
+SELECT 
+    Gender, 
+    COUNT(*) AS Customer_Count,
+    YEAR(CURDATE()) - YEAR(Birthday) AS Age,
+    City, 
+    State, 
+    Country, 
+    Continent 
+FROM 
+    merged_data 
+GROUP BY 
+    Gender, Age, City, State, Country, Continent;
+
+
+4.#Geographical analysis Sales
+SELECT 
+    City, 
+    State, 
+    SUM(Actual_Unitprice_In_USD * Quantity) AS Total_Sales 
+FROM 
+    merged_data 
+GROUP BY 
+    City, State 
+ORDER BY 
+    Total_Sales DESC;
+
+
+5.#Overall Sales Performance
+
+SELECT 
+    DATE(Order_Date) AS Sale_Date, 
+    SUM(Actual_Unitprice_In_USD * Quantity) AS Total_Sales 
+FROM 
+    merged_data 
+GROUP BY 
+    Sale_Date 
+ORDER BY 
+    Sale_Date;
+
+
+6.#Product popularity
+
+SELECT 
+    Product_Name, 
+    COUNT(*) AS Sales_Count 
+FROM 
+    merged_data 
+GROUP BY 
+    Product_Name 
+ORDER BY 
+    Sales_Count DESC;
+
+7.#Profitability analysis
+SELECT 
+    Product_Name, 
+    AVG(Actual_Unitprice_In_USD - Actual_Unitcost_In_USD) AS Avg_Profit_Margin 
+FROM 
+    merged_data 
+GROUP BY 
+    Product_Name 
+ORDER BY 
+    Avg_Profit_Margin DESC;
+
+8.#Purchase Pattern
+
+SELECT 
+    CustomerKey,
+    COUNT(Order_Number) AS Purchase_Frequency,
+    AVG(Actual_Unitprice_In_USD * Quantity) AS Average_Order_Value,
+    GROUP_CONCAT(DISTINCT Product_Name ORDER BY Quantity DESC) AS Preferred_Products 
+FROM 
+    merged_data 
+GROUP BY 
+    CustomerKey;
+
+9.#Sales by currency
+
+SELECT 
+    Currency_Code, 
+    SUM(Actual_Unitprice_In_USD * Quantity) AS Total_Sales 
+FROM 
+    merged_data 
+GROUP BY 
+    Currency_Code;
+
+
+10.#Sales by Product
+
+SELECT 
+    Product_Name, 
+    SUM(Quantity) AS Total_Quantity_Sold,
+    SUM(Actual_Unitprice_In_USD * Quantity) AS Total_Revenue 
+FROM 
+    merged_data 
+GROUP BY 
+    Product_Name 
+ORDER BY 
+    Total_Revenue DESC;
+
+
+11.#Sales by Store
+
+SELECT 
+    Store_Country, 
+    Store_State, 
+    SUM(Actual_Unitprice_In_USD * Quantity) AS Total_Sales 
+FROM 
+    merged_data 
+GROUP BY 
+    Store_Country, Store_State 
+ORDER BY 
+    Total_Sales DESC;
+
+12.#Store Performance Analysis
+
+SELECT 
+    Store_Country, 
+    Store_State, 
+    SUM(Actual_Unitprice_In_USD * Quantity) AS Total_Sales, 
+    AVG(Store_Square_Meters) AS Average_Size 
+FROM 
+    merged_data 
+GROUP BY 
+    Store_Country, Store_State;
+
